@@ -50,7 +50,7 @@ export interface GetSecretValueProps {
 }
 
 export interface GetSecretValueResponse {
-    value: string | undefined
+    value: string
 }
 
 export const getSecretValue = async ({ secretArn }: GetSecretValueProps): Promise<GetSecretValueResponse> => {
@@ -60,6 +60,9 @@ export const getSecretValue = async ({ secretArn }: GetSecretValueProps): Promis
     console.log({ module: "sm-facade", method: "getSecretValue", req })
     const res = await sm.getSecretValue(req).promise()
     console.log({ module: "sm-facade", method: "getSecretValue", res })
+    if (!res.SecretString) {
+        throw new Error(`No secret string for secret ${secretArn}`)
+    }
     return {
         value: res.SecretString
     }
