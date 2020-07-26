@@ -1,4 +1,4 @@
-import { CreateSecretRequest, PutSecretValueRequest } from "aws-sdk/clients/secretsmanager"
+import { CreateSecretRequest, GetSecretValueRequest, PutSecretValueRequest } from "aws-sdk/clients/secretsmanager"
 import aws, { SecretsManager } from "aws-sdk"
 
 const sm = new SecretsManager({ region: "us-east-1" })
@@ -42,7 +42,25 @@ export const putSecretValue = async ({ secretArn, secretValue }: PutSecretProps)
     if (!res.ARN) {
         throw new Error(`Error putting secret value for secret ${secretArn}`)
     }
+    return {}
+}
+
+export interface GetSecretValueProps {
+    secretArn: string
+}
+
+export interface GetSecretValueResponse {
+    value: string | undefined
+}
+
+export const getSecretValue = async ({ secretArn }: GetSecretValueProps): Promise<GetSecretValueResponse> => {
+    const req: GetSecretValueRequest = {
+        SecretId: secretArn
+    }
+    console.log({ module: "sm-facade", method: "getSecretValue", req })
+    const res = await sm.getSecretValue(req).promise()
+    console.log({ module: "sm-facade", method: "getSecretValue", res })
     return {
-        arn: res.ARN
+        value: res.SecretString
     }
 }
