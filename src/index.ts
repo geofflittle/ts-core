@@ -1,5 +1,6 @@
 export { asyncReduce } from "./async-reduce"
 export { createSecret } from "./facades/aws/sm-facade"
+export { generateId } from "./generate-id"
 export { verifyDefined } from "./object-utils"
 export { verifyPropDefined } from "./object-utils"
 export { putSecretValue } from "./facades/aws/sm-facade"
